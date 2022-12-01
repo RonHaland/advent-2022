@@ -16,7 +16,15 @@ foreach (var food in foods)
 }
 
 var mostCalorieRichElf = elves.OrderBy(e => e.Calories).Last();
-Console.WriteLine(mostCalorieRichElf.Calories);
+Console.WriteLine("Answer 1:");
+Console.WriteLine(mostCalorieRichElf.Calories); //prints answer 1
+
+var top3elvesCalories = elves.OrderByDescending(e => e.Calories).Take(3).Sum(e => e.Calories);
+
+Console.WriteLine();
+Console.WriteLine("Answer 2:");
+Console.WriteLine(top3elvesCalories);
+
 
 internal sealed record Elf(int Calories) 
 {
