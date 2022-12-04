@@ -17,6 +17,23 @@ foreach (var pair in pairs)
 Console.WriteLine("The count of fully contained ranges within the pairs is:");
 Console.WriteLine(count);
 
+count = 0;
+foreach (var pair in pairs)
+{
+    if (pair.Range1.Item1 <= pair.Range2.Item1 && pair.Range1.Item2 >= pair.Range2.Item1)
+    {
+        count++;
+        continue;
+    }
+    if (pair.Range2.Item1 <= pair.Range1.Item1 && pair.Range2.Item2 >= pair.Range1.Item1)
+    {
+        count++;
+    }
+}
+
+Console.WriteLine("The count of overlapping ranges within the pairs is:");
+Console.WriteLine(count);
+
 internal sealed class Pair
 {
 	public Pair(string input)
