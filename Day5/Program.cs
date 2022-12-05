@@ -2,15 +2,28 @@
 
 var file = await File.ReadAllTextAsync("Input.txt");
 
-var rows = file.Split("\r\n\r\n")[0].Split("\r\n").Reverse().Skip(1).ToList();
-var moves = file.Split("\r\n\r\n")[1].Split("\r\n").Select(s => new Move(s)).ToList();
+var rows = file.Split("\r\n\r\n")[0]
+               .Split("\r\n")
+               .Reverse()
+               .Skip(1)
+               .ToList();
+var moves = file.Split("\r\n\r\n")[1]
+                .Split("\r\n")
+                .Select(s => new Move(s))
+                .ToList();
 
 List<Stack<char>> stacks = MakeStacks(rows);
-
 moves.ForEach(m => m.ExecuteMove(stacks));
 
-Console.WriteLine("The top crates are:");
+Console.WriteLine("The top crates with CrateMover 9000 are:");
 Console.WriteLine(string.Join("",stacks.Select(s => s.Peek())));
+
+//part2
+stacks = MakeStacks(rows);
+moves.ForEach(m => m.ExecuteMoveV2(stacks));
+
+Console.WriteLine("The top crates with CrateMover 9001 are:");
+Console.WriteLine(string.Join("", stacks.Select(s => s.Peek())));
 
 
 static List<Stack<char>> MakeStacks(List<string> rows)
@@ -54,5 +67,14 @@ internal sealed class Move
         {
             stacks[To].Push(stacks[From].Pop());
         }
+    }
+
+    public void ExecuteMoveV2(List<Stack<char>> stacks)
+    {
+        var cratesToMove = Enumerable.Range(0, Count)
+            .Select(i => stacks[From].Pop())
+            .Reverse()
+            .ToList();
+        cratesToMove.ForEach(c => stacks[To].Push(c));
     }
 }
