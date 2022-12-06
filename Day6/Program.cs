@@ -1,23 +1,29 @@
-﻿var signal = (await File.ReadAllTextAsync("Input.txt")).ToQueue();
+﻿var input = await File.ReadAllTextAsync("Input.txt");
 //var signal = "nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg".ToQueue();
 
-Queue<char> buffer = new();
-while (buffer.Count < 4)
-{
-    buffer.Enqueue(signal.Dequeue());
-}
+Console.WriteLine("Start-of-packet: {0}", ProcessSignal(input.ToQueue(), 4));
+Console.WriteLine("Start-of-message: {0}", ProcessSignal(input.ToQueue(), 14));
 
-int signalStart = 4;
-while(signal.Count > 0)
+static int ProcessSignal(Queue<char> signal, int uniqueCount)
 {
-    if (buffer.Count == buffer.Distinct().Count())
+    Queue<char> messageBuffer = new();
+    int messageStart = uniqueCount;
+    while (messageBuffer.Count < messageStart)
     {
-        Console.WriteLine("Done with loop {0}", signalStart);
-        break;
+        messageBuffer.Enqueue(signal.Dequeue());
     }
-    buffer.Dequeue();
-    buffer.Enqueue(signal.Dequeue());
-    signalStart++;
+
+    while (signal.Count > 0)
+    {
+        if (messageBuffer.Count == messageBuffer.Distinct().Count())
+        {
+            return messageStart;
+        }
+        messageBuffer.Dequeue();
+        messageBuffer.Enqueue(signal.Dequeue());
+        messageStart++;
+    }
+    return -1;
 }
 
 internal static class StringExt
