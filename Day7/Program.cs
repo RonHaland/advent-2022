@@ -11,6 +11,13 @@ var sum = dirs.Where(d => d.Size < 100_000).Sum(d => d.Size);
 Console.WriteLine("Sum of dirs under 100k: {0}", sum);
 
 
+var freeSpace = 70_000_000 - fileTree.Size;
+var missingSpace = 30_000_000 - freeSpace;
+
+var smallestFolderToDelete = dirs.Where(d => d.Size > missingSpace).OrderBy(d => d.Size).First();
+
+Console.WriteLine("The smallest folder that can be deleted to achieve required free space is: {0}, {1}", smallestFolderToDelete.Name, smallestFolderToDelete.Size);
+
 Console.ReadLine();
 
 
